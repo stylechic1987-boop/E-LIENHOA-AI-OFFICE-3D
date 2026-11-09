@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { ContactShadows, Html, OrbitControls } from '@react-three/drei'
 import {
@@ -37,56 +37,136 @@ function OfficeRoom({ room, selected, onSelect }: {
   onSelect: (room: Room) => void
 }) {
   const [x, , z] = room.position
+
   return (
     <group position={[x, 0, z]} onClick={(event) => {
       event.stopPropagation()
       onSelect(room)
     }}>
-      <mesh position={[0, 0.12, 0]} castShadow receiveShadow>
+      {/* SÀN PHÒNG */}
+      <mesh position={[0, 0.12, 0]} receiveShadow>
         <boxGeometry args={[3.7, 0.24, 3.1]} />
-        <meshStandardMaterial color={selected ? '#f0dfb5' : '#e7edf1'} />
+        <meshStandardMaterial color={selected ? '#f1e4c7' : '#e8edf0'} />
       </mesh>
-      <mesh position={[0, 0.48, -1.48]} castShadow>
-        <boxGeometry args={[3.7, 0.65, 0.12]} />
-        <meshStandardMaterial color={room.color} transparent opacity={0.8} />
+
+      {/* VÁCH KÍNH PHÍA SAU */}
+      <mesh position={[0, 1.15, -1.5]}>
+        <boxGeometry args={[3.7, 1.8, 0.045]} />
+        <meshPhysicalMaterial color="#b9d8e5" transparent opacity={0.22} roughness={0.12} metalness={0.15} />
       </mesh>
-      <mesh position={[-1.79, 0.48, 0]} castShadow>
-        <boxGeometry args={[0.12, 0.65, 3.1]} />
-        <meshStandardMaterial color="#a8b7c3" transparent opacity={0.65} />
+
+      {/* KHUNG KIM LOẠI PHÍA SAU */}
+      {[-1.8, -0.9, 0, 0.9, 1.8].map((px) => (
+        <mesh key={px} position={[px, 1.15, -1.48]}>
+          <boxGeometry args={[0.055, 1.9, 0.075]} />
+          <meshStandardMaterial color="#899ba7" metalness={0.8} roughness={0.25} />
+        </mesh>
+      ))}
+
+      {/* VÁCH KÍNH HAI BÊN */}
+      {[-1, 1].map((side) => (
+        <group key={side}>
+          <mesh position={[side * 1.82, 1.05, 0]}>
+            <boxGeometry args={[0.045, 1.65, 3.05]} />
+            <meshPhysicalMaterial color="#b9d8e5" transparent opacity={0.2} roughness={0.12} />
+          </mesh>
+          <mesh position={[side * 1.82, 1.05, 0]}>
+            <boxGeometry args={[0.07, 1.8, 0.07]} />
+            <meshStandardMaterial color="#899ba7" metalness={0.8} roughness={0.25} />
+          </mesh>
+          <mesh position={[side * 1.82, 1.05, 1.48]}>
+            <boxGeometry args={[0.07, 1.8, 0.07]} />
+            <meshStandardMaterial color="#899ba7" metalness={0.8} roughness={0.25} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* KHUNG CỬA RA VÀO */}
+      {[-0.8, 0.8].map((px) => (
+        <mesh key={px} position={[px, 1.05, 1.53]}>
+          <boxGeometry args={[0.07, 1.8, 0.07]} />
+          <meshStandardMaterial color="#899ba7" metalness={0.8} roughness={0.25} />
+        </mesh>
+      ))}
+      <mesh position={[0, 1.93, 1.53]}>
+        <boxGeometry args={[1.65, 0.07, 0.07]} />
+        <meshStandardMaterial color="#899ba7" metalness={0.8} roughness={0.25} />
       </mesh>
-      <mesh position={[1.79, 0.48, 0]} castShadow>
-        <boxGeometry args={[0.12, 0.65, 3.1]} />
-        <meshStandardMaterial color="#a8b7c3" transparent opacity={0.65} />
+
+      {/* BÀN LÀM VIỆC */}
+      <mesh position={[0, 0.78, -0.35]} castShadow>
+        <boxGeometry args={[1.75, 0.12, 0.85]} />
+        <meshStandardMaterial color="#8b674b" roughness={0.4} />
       </mesh>
-      <mesh position={[0, 0.83, -1.2]}>
-        <boxGeometry args={[1.4, 0.08, 0.35]} />
-        <meshStandardMaterial color="#8b674b" />
+      {[-0.72, 0.72].map((px) => (
+        <mesh key={px} position={[px, 0.45, -0.35]} castShadow>
+          <boxGeometry args={[0.09, 0.62, 0.72]} />
+          <meshStandardMaterial color="#6e7d86" metalness={0.5} />
+        </mesh>
+      ))}
+
+      {/* MÀN HÌNH MÁY TÍNH */}
+      <mesh position={[0, 1.18, -0.58]} castShadow>
+        <boxGeometry args={[0.75, 0.48, 0.07]} />
+        <meshStandardMaterial color="#172b3c" metalness={0.35} roughness={0.2} />
       </mesh>
-      <mesh position={[0, 0.53, 0.35]} castShadow>
-        <boxGeometry args={[1.3, 0.16, 0.75]} />
-        <meshStandardMaterial color="#b4a28e" />
+      <mesh position={[0, 1.18, -0.535]}>
+        <boxGeometry args={[0.67, 0.39, 0.012]} />
+        <meshBasicMaterial color="#6da9bd" />
       </mesh>
-      <mesh position={[-0.9, 0.38, 0.75]} castShadow>
-        <boxGeometry args={[0.35, 0.55, 0.35]} />
-        <meshStandardMaterial color="#8296a4" />
+      <mesh position={[0, 0.99, -0.55]}>
+        <boxGeometry args={[0.08, 0.18, 0.08]} />
+        <meshStandardMaterial color="#899ba7" metalness={0.7} />
       </mesh>
-      <mesh position={[0.9, 0.38, 0.75]} castShadow>
-        <boxGeometry args={[0.35, 0.55, 0.35]} />
-        <meshStandardMaterial color="#8296a4" />
+
+      {/* BÀN PHỤ / TỦ HỒ SƠ */}
+      <mesh position={[1.25, 0.48, -0.75]} castShadow>
+        <boxGeometry args={[0.48, 0.72, 0.7]} />
+        <meshStandardMaterial color="#b8a48b" />
       </mesh>
-      <mesh position={[0, 0.35, -0.3]}>
-        <boxGeometry args={[0.65, 0.12, 0.5]} />
-        <meshStandardMaterial color="#c6b89f" />
+      {[0.3, 0.5, 0.7].map((py) => (
+        <mesh key={py} position={[1.25, py, -0.385]}>
+          <boxGeometry args={[0.34, 0.025, 0.015]} />
+          <meshStandardMaterial color="#765b43" />
+        </mesh>
+      ))}
+
+      {/* GHẾ NHÂN VIÊN */}
+      <mesh position={[0, 0.55, 0.65]} castShadow>
+        <boxGeometry args={[0.58, 0.13, 0.58]} />
+        <meshStandardMaterial color="#536a7a" />
       </mesh>
-      <Html position={[0, 1.35, 0]} center distanceFactor={13} style={{ pointerEvents: 'none' }}>
+      <mesh position={[0, 0.95, 0.91]} castShadow>
+        <boxGeometry args={[0.58, 0.68, 0.12]} />
+        <meshStandardMaterial color="#536a7a" />
+      </mesh>
+      <mesh position={[0, 0.34, 0.65]}>
+        <cylinderGeometry args={[0.045, 0.045, 0.38, 12]} />
+        <meshStandardMaterial color="#899ba7" metalness={0.8} />
+      </mesh>
+
+      {/* CÂY TRANG TRÍ */}
+      <mesh position={[-1.35, 0.38, 1.05]} castShadow>
+        <cylinderGeometry args={[0.18, 0.14, 0.36, 16]} />
+        <meshStandardMaterial color="#a77a53" />
+      </mesh>
+      <mesh position={[-1.35, 0.85, 1.05]} castShadow>
+        <sphereGeometry args={[0.35, 16, 16]} />
+        <meshStandardMaterial color="#4c8b68" roughness={0.8} />
+      </mesh>
+
+      {/* BIỂN TÊN PHÒNG */}
+      <Html position={[0, 2.15, -1.4]} center distanceFactor={13} style={{ pointerEvents: 'none' }}>
         <div className={`room-label ${selected ? 'room-label-active' : ''}`}>
           <span style={{ background: room.color }}>{room.icon}</span>
           <strong>{room.name}</strong>
           <small>{room.employees} nhân sự</small>
         </div>
       </Html>
+
+      {/* VIỀN PHÒNG ĐƯỢC CHỌN */}
       {selected && (
-        <mesh position={[0, 0.02, 0]}>
+        <mesh position={[0, 0.025, 0]}>
           <boxGeometry args={[3.85, 0.025, 3.25]} />
           <meshBasicMaterial color="#d5b46b" wireframe />
         </mesh>
@@ -94,7 +174,6 @@ function OfficeRoom({ room, selected, onSelect }: {
     </group>
   )
 }
-
 function OfficeScene({ selected, onSelect }: {
   selected: string
   onSelect: (room: Room) => void
