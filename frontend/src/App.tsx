@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useGLTF, useAnimations } from '@react-three/drei'
+import type { Group } from 'three'
 import { Canvas } from '@react-three/fiber'
 import { ContactShadows, Html, OrbitControls } from '@react-three/drei'
 import {
@@ -30,7 +32,40 @@ const rooms: Room[] = [
   { id: 'hr', name: 'NHÂN SỰ', department: 'Phòng nhân sự', position: [5, 0, 1.2], color: '#d18c9b', icon: 'H', employees: 3, tasks: 4, description: 'Quản lý nhân sự, tuyển dụng và đánh giá hiệu suất.' },
   { id: 'ai', name: 'AI MEETING', department: 'Phòng họp AI', position: [0, 0, 5.5], color: '#5cbed0', icon: 'AI', employees: 1, tasks: 3, description: 'Trợ lý AI phân tích, đề xuất và hỗ trợ điều hành.' },
 ]
+function DirectorAvatar() {
+  const avatarRef = useRef<Group>(null)
 
+  const { scene, animations } = useGLTF(
+    '/models/avatars/giam-doc-nam.glb'
+  )
+
+  const { actions, names } = useAnimations(animations, avatarRef)
+
+  useEffect(() => {
+    const animation = actions[names[0]]
+
+    if (animation) {
+      animation.reset().fadeIn(0.3).play()
+    }
+
+    return () => {
+      animation?.fadeOut(0.2)
+    }
+  }, [actions, names])
+
+  return (
+    <group
+      ref={avatarRef}
+      position={[0, 0.13, 1.0]}
+      scale={0.85}
+      rotation={[0, Math.PI, 0]}
+    >
+      <primitive object={scene} />
+    </group>
+  )
+}
+
+useGLTF.preload('/models/avatars/giam-doc-nam.glb')
 function OfficeRoom({ room, selected, onSelect }: {
   room: Room
   selected: boolean
@@ -154,7 +189,8 @@ function OfficeRoom({ room, selected, onSelect }: {
         <sphereGeometry args={[0.35, 16, 16]} />
         <meshStandardMaterial color="#4c8b68" roughness={0.8} />
       </mesh>
-
+{/* NHÂN VẬT GIÁM ĐỐC */}
+{room.id === 'director' && <DirectorAvatar />}
       {/* BIỂN TÊN PHÒNG */}
       <Html position={[0, 2.15, -1.4]} center distanceFactor={13} style={{ pointerEvents: 'none' }}>
         <div className={`room-label ${selected ? 'room-label-active' : ''}`}>
